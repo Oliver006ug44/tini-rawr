@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Music Player</title>
+  <link rel="stylesheet" href="https://unpkg.com/98.css">
+  <style>
+    @font-face {
+      font-family: 'MS Sans Serif XP';
+      src: url('../fonts/MS Sans Serif.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body {
+      background-color: #d3c1c7;
+      font-family: "MS Sans Serif XP", sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .player-container {
+      width: 460px;
+      height: 180px;
+      background: #f0e6ea;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 2px solid gray;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .centered-section {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .song-info {
+      font-size: 22px;
+      margin-bottom: 10px;
+      user-select: none;
+    }
+
+    .progress-container {
+      width: 90%;
+      height: 10px;
+      background: #aaa;
+      margin: 0 auto;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .progress-filled {
+      height: 100%;
+      background: #444;
+      width: 0%;
+    }
+
+    .time-display {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      margin: 5px auto 10px auto;
+      width: 90%;
+      user-select: none;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid #999;
+    }
+
+    .controls button {
+      font-size: 12px;
+      padding: 4px 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="player-container">
+    <div class="content">
+      <div class="centered-section">
+        <div class="song-info" id="songTitle">🎵 Loading...</div>
+
+        <div class="progress-container" id="progressContainer">
+          <div class="progress-filled" id="progressBar"></div>
+        </div>
+
+        <div class="time-display">
+          <span id="currentTime">0:00</span>
+          <span id="duration">0:00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button onclick="prevSong()">⏮</button>
+      <button onclick="audio.play()">▶</button>
+      <button onclick="audio.pause()">⏸</button>
+      <button onclick="nextSong()">⏭</button>
+    </div>
+  </div>
+
+  <audio id="audio" crossorigin="anonymous"></audio>
+
+  <script>
+    const audio = document.getElementById("audio");
+    const progressContainer = document.getElementById("progressContainer");
+    const progressBar = document.getElementById("progressBar");
+    const currentTimeEl = document.getElementById("currentTime");
+    const durationEl = document.getElementById("duration");
+    const songTitleEl = document.getElementById("songTitle");
+
+    // 🔹 List of songs (FIXED paths)
+    const songs = [
+      {
+        title: "🎵 No PlayBoy - 9MUSES",
+        path: "../../tracks/SpotiDownloader.com - No PlayBoy - 9MUSES.mp3"
+      },
+      {
+        title: "🎵 미행 (그림자 _ Shadow) - f(x)",
+        path: "../../tracks/SpotiDownloader.com - 미행 (그림자 _ Shadow) - f(x).mp3"
+      }
+    ];
+
+    let currentSongIndex = 0;
+
+    function loadSong(index) {
+      const song = songs[index];
+      audio.src = song.path;
+      songTitleEl.textContent = song.title;
+      audio.load();
+    }
+
+    function stopAudio() {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+
+    function nextSong() {
+      currentSongIndex = (currentSongIndex + 1) % songs.length;
+      loadSong(currentSongIndex);
+      audio.play();
+    }
+
+    function prevSong() {
+      currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+      loadSong(currentSongIndex);
+      audio.play();
+    }
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = Math.floor(seconds % 60);
+      return m + ':' + s.toString().padStart(2, '0');
+    }
+
+    audio.addEventListener("loadedmetadata", () => {
+      durationEl.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progressBar.style.width = percent + "%";
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+    });
+
+    progressContainer.addEventListener("click", (e) => {
+      const rect = progressContainer.getBoundingClientRect();
+      const percent = (e.clientX - rect.left) / rect.width;
+      audio.currentTime = percent * audio.duration;
+    });
+
+    let isDragging = false;
+    progressContainer.addEventListener("mousedown", () => isDragging = true);
+    document.addEventListener("mouseup", () => isDragging = false);
+    document.addEventListener("mousemove", (e) => {
+      if (isDragging) {
+        const rect = progressContainer.getBoundingClientRect();
+        const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+        audio.currentTime = percent * audio.duration;
+      }
+    });
+
+    // Load the first song
+    loadSong(currentSongIndex);
+  </script>
+</body>
+
+</html>

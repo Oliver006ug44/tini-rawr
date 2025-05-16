@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Win98 Console</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      font-family: 'Share Tech Mono', monospace;
+      color: #FFB8E0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #console-output {
+      padding: 10px;
+      height: 100%;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .console-input-line {
+      display: flex;
+    }
+
+    .console-input-line span {
+      white-space: pre;
+    }
+
+    .console-input {
+      background: none;
+      border: none;
+      outline: none;
+      color: #FFB8E0;
+      font-family: inherit;
+      font-size: 14px;
+      flex-grow: 1;
+    }
+
+    .console {
+      background-color: black;
+      color: pink;
+      padding: 10px;
+      height: 300px;
+      width: 400px;
+      overflow-y: scroll;
+      direction: rtl;
+      font-family: 'Courier New', monospace;
+    }
+
+    .console * {
+      direction: ltr;
+      text-align: left;
+    }
+  </style>
+</head>
+
+<body style="background-color: #000;">
+  <div id="console-output">
+    <div>Microsoft(R) Windows 98</div>
+    <div>(C)Copyright Microsoft Corp 1981-1999.</div>
+    <br>
+    <div class="console-input-line">
+      <span>C:\></span><input class="console-input" id="console-input" autofocus />
+    </div>
+  </div>
+
+  <script>
+    const output = document.getElementById("console-output");
+
+    function addLine(text) {
+      const line = document.createElement("div");
+      line.textContent = text;
+      output.insertBefore(line, document.querySelector(".console-input-line"));
+    }
+
+    function createInputLine() {
+      const inputLine = document.createElement("div");
+      inputLine.className = "console-input-line";
+
+      const span = document.createElement("span");
+      span.textContent = "C:\\>";
+
+      const input = document.createElement("input");
+      input.className = "console-input";
+
+      inputLine.appendChild(span);
+      inputLine.appendChild(input);
+      output.appendChild(inputLine);
+
+      input.focus();
+
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          const command = input.value.trim();
+          addLine(`C:\\>${command}`);
+          inputLine.remove();
+
+          if (command === "cls") {
+            output.innerHTML = "";
+            createInputLine();
+            return;
+          }
+
+          handleCommand(command);
+          createInputLine();
+          output.scrollTop = output.scrollHeight;
+        }
+      });
+    }
+
+    function handleCommand(cmd) {
+      if (cmd === "help") {
+        addLine("Commands: help, dir, echo [text], cls");
+      } else if (cmd === "dir") {
+        addLine("Volume in drive C is OS\nDirectory of C:\\\n\nCOMMAND  <DIR>\nWINDOWS  <DIR>\n...");
+      } else if (cmd.startsWith("echo ")) {
+        addLine(cmd.slice(5));
+      } else if (cmd === null || cmd === "") {
+        output.innerHTML = "";
+        createInputLine();
+      } else {
+        addLine(`'${cmd}' is not recognized as an internal or external command`);
+      }
+    }
+
+    document.getElementById("console-input").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        const command = this.value.trim();
+        addLine(`C:\\>${command}`);
+        this.parentElement.remove();
+
+        if (command === "cls") {
+          output.innerHTML = "";
+          createInputLine();
+          return;
+        }
+
+        handleCommand(command);
+        createInputLine();
+        output.scrollTop = output.scrollHeight;
+      }
+    });
+  </script>
+</body>
+
+</html>
