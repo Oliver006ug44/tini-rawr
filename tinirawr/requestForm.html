@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Webcore Grid</title>
+    <link rel="stylesheet" href="src/mini-website/style.css">
+
+</head>
+
+<body>
+    <div class="warper">
+        <!-- Left column container -->
+        <div class="left-col">
+            <!-- Top left window: Journal -->
+            <div class="window custom tall navbar-win">
+                <div class="title-bar">
+                    <div class="title-bar-text">🌸 Navbar.exe</div>
+                    <div class="title-bar-controls">
+                        <button aria-label="Minimize"></button>
+                        <button aria-label="Maximize"></button>
+                        <button aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="window-body menu-body">
+                    <h4 style="margin-bottom: 7px;">-- Page-- </h4>
+                    <button class="button-pink">Main</button>
+                    <button class="button-pink">Shop</button>
+                    <button class="button-pink">About</button>
+                    <hr>
+                    <h4 style="margin-bottom: 7px;">-- Links-- </h4>
+                    <button class="button-pink">Socials</button>
+                    <button class="button-pink">Mocha</button>
+                </div>
+            </div>
+
+            <!-- Bottom left window: Listening To -->
+            <div class="window custom short">
+                <div class="title-bar">
+                    <div class="title-bar-text">💭 Notes.txt</div>
+                    <div class="title-bar-controls">
+                        <button aria-label="Minimize"></button>
+                        <button aria-label="Maximize"></button>
+                        <button aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="window-body">
+                    <p>Youcan leave me a message here! whenever it's a custom request or a few words of
+                        appreciation! <strong><3</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right column container -->
+        <div class="right-col">
+            <!-- Top right window -->
+            <div class="window custom short col-1">
+                <div class="title-bar">
+                    <div class="title-bar-text">☁️ contact.exe</div>
+                    <div class="title-bar-controls">
+                        <button aria-label="Minimize"></button>
+                        <button aria-label="Maximize"></button>
+                        <button aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="window-body">
+                    <div class="warper-window">
+                        <div class="about-content">
+                        <div class="image-row">
+
+                            <img src="./src/img/choco_hello.png" alt="Left Image">
+                            <img src="./src/img/choco_dead.png" alt="Center Image">
+                            <img src="./src/img/choco_welc.png" alt="Right Image">
+                        </div>
+                    </div>
+                    <img class="choco-heart" src="src/img/choco-heart.webp" alt="choco-heart">
+                    <h1 id="form-title">Leave me a message!</h1>
+                        <form class="styled-form">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" required>
+
+                            <label for="message">Message:</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+
+                            <button type="submit" class="button-pink">Send</button>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+
+</body>
+
+</html>

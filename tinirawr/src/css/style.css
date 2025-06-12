@@ -1,0 +1,113 @@
+@font-face {
+  font-family: 'MS Sans Serif XP';
+  src: url('../fonts/MS Sans Serif.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+    background-image: url(../img/background.jpg);
+    background-size: cover;
+    margin: 0;
+    overflow: hidden;
+}
+
+.desktop {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.app-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 14px;
+  cursor: pointer;
+  user-select: none;
+  width: 80px;
+}
+
+.app-icon img {
+  width: 48px;
+  height: 48px;
+}
+
+.app-icon span {
+  font-size: 12px;
+  margin-top: 4px;
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px 0 black;
+  font-family: 'MS Sans Serif XP';
+}
+
+.window {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #d0c2cb; 
+  font-family: 'MS Sans Serif XP';
+}
+
+.window-body {
+  flex: 1;
+  display: flex;
+  padding: 0;
+  overflow: hidden;
+}
+
+.title-bar {
+  background: linear-gradient(45deg, #EC7FA9, #FFB8E0); /* Pinkish gradient */
+  color: #ffe6e6;             /* White text color */
+  font-family: 'Courier New', monospace; /* Retro typewriter font */
+  padding: 5px;
+  border-bottom: 1px solid #ffeaf6; /* Add a thin border at the bottom of the title bar */
+}
+
+.win-btn{
+  background-color: #ffeaf6;
+  font-family: 'MS Sans Serif XP';
+  color: #FFB8E0;
+  border-color: #FFB8E0;
+}
+
+.menu-bar {
+  display: flex;
+  background: #FFB8E0;
+  padding: 2px 6px;
+  font-family: sans-serif;
+  font-size: 14px;
+  user-select: none;
+}
+
+.menu-item {
+  margin-right: 12px;
+  cursor: pointer;
+  font-family: 'MS Sans Serif XP';
+}
+
+.title-bar-controls {
+  display: flex;
+  align-items: center;
+  background-color: #FFB8E0;
+}
+
+.title-bar-controls button {
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+  cursor: pointer;
+}
+
+.menu-item::first-letter {
+  text-decoration: underline;
+}
+
+
+.terminal-body, #terminal-body {
+  background-color: #000 !important;
+}

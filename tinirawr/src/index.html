@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/98.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <title>My Portfolio</title>
+</head>
+
+<body>
+  <div class="desktop" id="desktop">
+    <div class="app-icon" data-app="notes">
+      <img src="img/note.png" alt="Notes" />
+      <span>Notes</span>
+    </div>
+    <div class="app-icon" data-app="calculator">
+      <img src="img/calculator-0.png" alt="Calculator" />
+      <span>Calculator</span>
+    </div>
+
+    <div class="app-icon" data-app="Console">
+      <img src="img/console_prompt-0.png" alt="Console" />
+      <span>Console</span>
+    </div>
+
+    <div class="app-icon" data-app="music_player">
+      <img src="img/music.png" alt="Music_Player" />
+      <span>Music Player</span>
+    </div>
+
+    <div class="app-icon" data-app="browser">
+      <img src="img/msie1-2.png" alt="Browser" />
+      <span>Internet Explorer</span>
+    </div>
+
+
+  </div>
+
+  <!-- Taskbar -->
+
+   <!--
+  <div class="taskbar">
+    <button class="start-button" onclick="toggleStartMenu()">Start</button>
+    <div class="start-menu" id="startMenu">
+      <div class="start-app" onclick="openApp('browser')">
+        <img src="img/msie1-2.png" alt="Browser Icon">
+        <span>Browser</span>
+      </div>
+    </div>
+  </div> -->
+
+
+  <script type="module">
+    import Window98 from './window.js';
+
+    const appHandlers = {
+      notes: () => {
+        new Window98({
+          title: "Notes",
+          content: `
+<textarea style="width:100%; height:100%; border:none; padding:4px; box-sizing:border-box; resize: none;">
+Click on any part of the website to explore it :3
+
+u can drag the window around :D
+            </textarea>`,
+          width: 300,
+          height: 250,
+          menu: ["File", "Edit", "View"]
+        });
+      },
+      calculator: () => {
+        new Window98({
+          title: "Calculator",
+          url: "apps/calculator.html",
+          width: 500,
+          height: 253,
+          menu: []
+        });
+      },
+      browser: () => {
+        new Window98({
+          title: "Web Browser",
+          url: "mini-website/index.html", // You’ll need to create this file
+          width: 800,
+          height: 600,
+          menu: ["File", "History", "View"]
+        });
+      },
+
+      console: () => {
+        new Window98({
+          title: "Console",
+          url: "apps/terminal.html",
+          width: 500,
+          height: 500,
+          menu: [],
+          scrollable: true
+        });
+      },
+
+      music_player: () => {
+        new Window98({
+          title: "Music Player",
+          url: "apps/music_player.html",
+          width: 510,
+          height: 310,
+          menu: []
+        });
+      },
+
+      browser: () => {
+        new Window98({
+          title: "Internet Explorer",
+          url: "mini-website/index.html",
+          width: 900,
+          height: 800,
+          menu: [],
+          scrollable: true
+        });
+      }
+
+    };
+
+    document.querySelectorAll(".app-icon").forEach(icon => {
+      icon.addEventListener("dblclick", () => {
+        const app = icon.dataset.app?.toLowerCase();
+        if (app && appHandlers[app]) appHandlers[app]();
+      });
+    });
+  </script>
+
+  <script>
+
+
+    // change the background every 30 minutes.
+    const images = [
+      'img/backgrounds/background1.jpg',
+      'img/backgrounds/background2.jpg',
+      'img/backgrounds/background3.jpg',
+      'img/backgrounds/background4.jpg',
+      'img/backgrounds/background5.jpg',
+      'img/backgrounds/background6.jpg'
+    ];
+
+    function setRandomBackground() {
+      const randomIndex = Math.floor(Math.random() * images.length);
+      document.body.style.backgroundImage = `url('${images[randomIndex]}')`;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundRepeat = 'no-repeat';
+      document.body.style.backgroundPosition = 'center';
+    }
+
+    // Set initially
+    setRandomBackground();
+
+    // Update every 30 minutes
+    setInterval(setRandomBackground, 30 * 60 * 1000);
+
+
+    //** calculator **//
+
+
+
+  </script>
+
+</body>
+
+</html>
