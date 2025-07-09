@@ -90,6 +90,14 @@
       cursor: pointer;
       user-select: none;
     }
+
+    #volumeContainer {
+      height: 12px;
+    }
+
+    #volumeContainer>div {
+      border: 1px solid #555;
+    }
   </style>
 </head>
 
@@ -116,93 +124,127 @@
       <button onclick="audio.play()">▶</button>
       <button onclick="audio.pause()">⏸</button>
       <button onclick="nextSong()">⏭</button>
+      <button onclick="toggleVolumeBar()">🔊</button>
     </div>
-  </div>
 
-  <audio id="audio" crossorigin="anonymous"></audio>
+    <!-- Volume bar container -->
+    <div id="volumeContainer" style="display: none; width: 90%; margin: 4px auto 0 auto; cursor: pointer;">
+      <div style="background: #aaa; height: 8px; position: relative;">
+        <div id="volumeBar" style="background: #444; height: 100%; width: 100%;"></div>
+      </div>
+    </div>
 
-  <script>
-    const audio = document.getElementById("audio");
-    const progressContainer = document.getElementById("progressContainer");
-    const progressBar = document.getElementById("progressBar");
-    const currentTimeEl = document.getElementById("currentTime");
-    const durationEl = document.getElementById("duration");
-    const songTitleEl = document.getElementById("songTitle");
 
-    // 🔹 List of songs (FIXED paths)
-    const songs = [
-      {
-        title: "🎵 No PlayBoy - 9MUSES",
-        path: "../../tracks/SpotiDownloader.com - No PlayBoy - 9MUSES.mp3"
-      },
-      {
-        title: "🎵 미행 (그림자 _ Shadow) - f(x)",
-        path: "../../tracks/SpotiDownloader.com - 미행 (그림자 _ Shadow) - f(x).mp3"
+    <audio id="audio" crossorigin="anonymous"></audio>
+
+    <script>
+      const audio = document.getElementById("audio");
+      const progressContainer = document.getElementById("progressContainer");
+      const progressBar = document.getElementById("progressBar");
+      const currentTimeEl = document.getElementById("currentTime");
+      const durationEl = document.getElementById("duration");
+      const songTitleEl = document.getElementById("songTitle");
+
+      // 🔹 List of songs (FIXED paths)
+      const songs = [
+        {
+          title: "🎵 No PlayBoy - 9MUSES",
+          path: "../../tracks/SpotiDownloader.com - No PlayBoy - 9MUSES.mp3"
+        },
+        {
+          title: "🎵 미행 (그림자 _ Shadow) - f(x)",
+          path: "../../tracks/SpotiDownloader.com - 미행 (그림자 _ Shadow) - f(x).mp3"
+        }
+      ];
+
+      let currentSongIndex = 0;
+
+      function loadSong(index) {
+        const song = songs[index];
+        audio.src = song.path;
+        songTitleEl.textContent = song.title;
+        audio.load();
       }
-    ];
 
-    let currentSongIndex = 0;
+      function stopAudio() {
+        audio.pause();
+        audio.currentTime = 0;
+      }
 
-    function loadSong(index) {
-      const song = songs[index];
-      audio.src = song.path;
-      songTitleEl.textContent = song.title;
-      audio.load();
-    }
+      function nextSong() {
+        currentSongIndex = (currentSongIndex + 1) % songs.length;
+        loadSong(currentSongIndex);
+        audio.play();
+      }
 
-    function stopAudio() {
-      audio.pause();
-      audio.currentTime = 0;
-    }
+      function prevSong() {
+        currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+        loadSong(currentSongIndex);
+        audio.play();
+      }
 
-    function nextSong() {
-      currentSongIndex = (currentSongIndex + 1) % songs.length;
-      loadSong(currentSongIndex);
-      audio.play();
-    }
+      function formatTime(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return m + ':' + s.toString().padStart(2, '0');
+      }
 
-    function prevSong() {
-      currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-      loadSong(currentSongIndex);
-      audio.play();
-    }
+      audio.addEventListener("loadedmetadata", () => {
+        durationEl.textContent = formatTime(audio.duration);
+      });
 
-    function formatTime(seconds) {
-      const m = Math.floor(seconds / 60);
-      const s = Math.floor(seconds % 60);
-      return m + ':' + s.toString().padStart(2, '0');
-    }
+      audio.addEventListener("timeupdate", () => {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progressBar.style.width = percent + "%";
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+      });
 
-    audio.addEventListener("loadedmetadata", () => {
-      durationEl.textContent = formatTime(audio.duration);
-    });
-
-    audio.addEventListener("timeupdate", () => {
-      const percent = (audio.currentTime / audio.duration) * 100;
-      progressBar.style.width = percent + "%";
-      currentTimeEl.textContent = formatTime(audio.currentTime);
-    });
-
-    progressContainer.addEventListener("click", (e) => {
-      const rect = progressContainer.getBoundingClientRect();
-      const percent = (e.clientX - rect.left) / rect.width;
-      audio.currentTime = percent * audio.duration;
-    });
-
-    let isDragging = false;
-    progressContainer.addEventListener("mousedown", () => isDragging = true);
-    document.addEventListener("mouseup", () => isDragging = false);
-    document.addEventListener("mousemove", (e) => {
-      if (isDragging) {
+      progressContainer.addEventListener("click", (e) => {
         const rect = progressContainer.getBoundingClientRect();
-        const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+        const percent = (e.clientX - rect.left) / rect.width;
         audio.currentTime = percent * audio.duration;
-      }
-    });
+      });
 
-    // Load the first song
-    loadSong(currentSongIndex);
-  </script>
+      let isDragging = false;
+      progressContainer.addEventListener("mousedown", () => isDragging = true);
+      document.addEventListener("mouseup", () => isDragging = false);
+      document.addEventListener("mousemove", (e) => {
+        if (isDragging) {
+          const rect = progressContainer.getBoundingClientRect();
+          const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+          audio.currentTime = percent * audio.duration;
+        }
+      });
+
+      const volumeContainer = document.getElementById("volumeContainer");
+      const volumeBar = document.getElementById("volumeBar");
+
+      // Toggle visibility of the volume bar
+      function toggleVolumeBar() {
+        volumeContainer.style.display = volumeContainer.style.display === "none" ? "block" : "none";
+      }
+
+      // Set volume when user clicks on the volume bar
+      volumeContainer.addEventListener("click", (e) => {
+        const rect = volumeContainer.getBoundingClientRect();
+        const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+        audio.volume = percent;
+        updateVolumeUI();
+      });
+
+      // Update volume bar width to match current volume
+      function updateVolumeUI() {
+        volumeBar.style.width = (audio.volume * 100) + "%";
+      }
+
+      // Set initial volume bar
+      audio.volume = 1;
+      updateVolumeUI();
+
+
+      // Load the first song
+      loadSong(currentSongIndex);
+    </script>
 </body>
 
 </html>
